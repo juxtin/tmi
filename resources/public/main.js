@@ -14,10 +14,11 @@ function getQueryParam (variable, defaultValue) {
     return defaultValue || false;
 }
 
-function myFunc() {
-    var some_settings = { 'stopID' : document.getElementById ('stopID').value }
-        
+var return_to = getQueryParam ('return_to', 'pebblejs://close#');
+
+document.getElementById ('myForm').onsubmit = function () {
+    var some_settings = { 'stopID' : document.getElementById ('stopID').value };
     // Set the return URL depending on the runtime environment
-    var return_to = getQueryParam ('return_to', 'pebblejs://close#');
-    document.location = return_to + encodeURIComponent (JSON.stringify (some_settings))
+    location.href = return_to + encodeURIComponent(JSON.stringify(some_settings));
+    return false;
 }
