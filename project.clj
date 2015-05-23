@@ -6,6 +6,7 @@
                  [hiccup "1.0.5"]
                  [ring-server "0.3.1"]
                  [cheshire "5.4.0"]
+                 [clj-time "0.9.0"]
                  [environ "1.0.0"]]
   :plugins [[lein-ring "0.8.12"]]
   :min-lein-version "2.5.0"

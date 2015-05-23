@@ -1,6 +1,9 @@
 (ns tmi.external-api
   (:require [cheshire.core :as json]
-            [environ.core :refer [env]]))
+            [environ.core :refer [env]]
+            [clj-time.core :as t]
+            [clj-time.format :as time-fmt]
+            [clj-time.local :as l]))
 
 (def trimet-id (or (env :trimet-id)
                    (throw (IllegalArgumentException.
