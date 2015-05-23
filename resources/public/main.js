@@ -17,7 +17,8 @@ function getQueryParam (variable, defaultValue) {
 var return_to = getQueryParam ('return_to', 'pebblejs://close#');
 
 document.getElementById ('myForm').onsubmit = function () {
-    var some_settings = { 'stopID' : document.getElementById ('stopID').value };
+    var some_settings = { 'stopID' : document.getElementById ('stopID').value,
+                          'bus' : document.getElementById ('bus').value };
     // Set the return URL depending on the runtime environment
     location.href = return_to + encodeURIComponent(JSON.stringify(some_settings));
     return false;
