@@ -1,6 +1,6 @@
 # tmi
 
-FIXME
+Requres WUNDERGROUND_ID and TRIMET_ID to be set via the environment.
 
 ## Prerequisites
 
