@@ -1,13 +1,12 @@
 (ns tmi.external-api
-  (:require [trimet.core :as tm]
-            [cheshire.core :as json]
+  (:require [cheshire.core :as json]
             [environ.core :refer [env]]))
 
-(def trimet-id (or (:trimet-id env)
+(def trimet-id (or (env :trimet-id)
                    (throw (IllegalArgumentException.
                            "No :trimet-id found in environment!"))))
 
-(def wunderground-id (or (:wunderground-id env)
+(def wunderground-id (or (env :wunderground-id)
                          (throw (IllegalArgumentException.
                                  "No :wunderground-id found in environment!"))))
 
@@ -19,11 +18,34 @@
       (catch Exception e
         (throw (IllegalArgumentException. (str x " is not a valid ID.")))))))
 
+(defn get-stop*
+  ;; COPYPASTA
+  "Queries the Trimet API using the supplied appId."
+  [app-id stop]
+  (let [query-head (str "http://developer.trimet.org/ws/V1/arrivals?appId=" app-id "&json=true&locIDs=")]
+    (let [query (str query-head stop)]
+      (-> query
+        (slurp)
+        (json/decode keyword)))))
+
+(defn next-arrivals* [response route]
+  ;; COPYPASTA
+  (->> (get-in response [:resultSet :arrival])
+       (filter #(= route (get % :route)))
+       (map (juxt #(get % :fullSign) #(get % :estimated)))))
+
+(defn get-arrivals*
+  ;; COPYPASTA
+  "Gets the next arrivals for the given stop and bus."
+  [id stop bus]
+  (-> (get-stop* id stop)
+    (next-arrivals* bus)))
+
 (defn get-arrivals
   [stop bus]
-  (->> (tm/get-arrivals trimet-id
-                        (->int stop)
-                        (->int bus))
+  (->> (get-arrivals* trimet-id
+                      (->int stop)
+                      (->int bus))
     (map second)
     (keep identity)))
 

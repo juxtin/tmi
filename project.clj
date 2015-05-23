@@ -6,7 +6,6 @@
                  [hiccup "1.0.5"]
                  [ring-server "0.3.1"]
                  [cheshire "5.4.0"]
-                 [trimet "0.1.0-SNAPSHOT"]
                  [environ "1.0.0"]]
   :plugins [[lein-ring "0.8.12"]]
   :ring {:handler tmi.handler/app
