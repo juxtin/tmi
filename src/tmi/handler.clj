@@ -19,5 +19,5 @@
 
 (def app
   (-> (routes home-routes app-routes)
-      (handler/site)
-      (wrap-base-url)))
+      handler/site
+      wrap-base-url))
