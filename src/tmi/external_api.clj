@@ -31,8 +31,12 @@
         (slurp)
         (json/decode keyword)))))
 
-(defn next-arrivals* [response route]
+(defn next-arrivals*
   ;; COPYPASTA
+  [response route]
+  {:pre [(map? response)
+         (or (integer? route)
+             (string? route))]}
   (->> (get-in response [:resultSet :arrival])
        (filter #(= route (get % :route)))
        (map (juxt #(get % :fullSign) #(get % :estimated)))))
@@ -44,13 +48,25 @@
   (-> (get-stop* id stop)
     (next-arrivals* bus)))
 
+(defn minutes-until
+  [s]
+  (let [t (time-fmt/parse s)
+        now (l/local-now)]
+    (-> (t/interval now t)
+      t/in-minutes)))
+
 (defn get-arrivals
   [stop bus]
   (->> (get-arrivals* trimet-id
                       (->int stop)
                       (->int bus))
     (map second)
-    (keep identity)))
+    (filter some?)))
+
+(defn get-arrival-times
+  [stop bus]
+  (->> (get-arrivals stop bus)
+    (map minutes-until)))
 
 (defn hourly-weather
   []
@@ -68,4 +84,4 @@
 (defn get-advice
   [stop bus]
   {:weather (current-conditions)
-   :arrivals (get-arrivals stop bus)})
+   :arrivals (get-arrival-times stop bus)})
