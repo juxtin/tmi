@@ -8,6 +8,7 @@
                  [cheshire "5.4.0"]
                  [environ "1.0.0"]]
   :plugins [[lein-ring "0.8.12"]]
+  :min-lein-version "2.5.0"
   :ring {:handler tmi.handler/app
          :init tmi.handler/init
          :destroy tmi.handler/destroy}
